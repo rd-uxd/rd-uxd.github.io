@@ -1,0 +1,43 @@
+body {
+	padding-left: 15px;
+	padding-top: 0px;
+}
+
+h3 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 100%;
+	color: #152935;
+}
+
+label, button {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 85%;
+	color: #152935;
+}	
+
+input[type=checkbox] {
+	vertical-align: -2px;
+	margin-right: 5px;
+}
+
+input[type=radio] {
+	vertical-align: -1px;
+	margin-right: 5px;
+}
+
+.input-prop {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 85%;
+	color: #152935;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.input-mono {
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 85%;
+	color: #152935;
+	font-weight: bold;
+	padding-left: 5px;
+	padding-right: 5px;
+}

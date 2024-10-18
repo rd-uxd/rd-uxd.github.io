@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Password Generator</title>
+<link href="css/style.css" rel="stylesheet">
+<link rel="shortcut icon" href="favicon.png">
+<script src="js/crypt.js" language="javascript"></script>
+<script language="javascript">
+function compute() {
+	var password;
+	var i = 1;
+	if (document.getElementById('special').checked) {
+		do {
+  			password = b64_sha1(document.getElementById('master').value + '-' + i + ':' + document.getElementById('site').value).substr(0,12);
+  			i++;
+		}
+		while (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^a-zA-Z0-9]/.test(password));
+	}
+	else {
+		do {
+  			password = b64_sha1(document.getElementById('master').value + '-' + i + ':' + document.getElementById('site').value).substr(0,12);
+  			i++;
+		}
+		while (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || /[^a-zA-Z0-9]/.test(password));
+	}
+	if (document.getElementById('copy').checked && document.getElementById('clear').checked) {
+		copyToClipboard(password);
+		clearAll();
+		document.getElementById('password').value = "Password copied";
+		setTimeout(function () { clearPassword(); }, 3000);
+	}
+	else if (document.getElementById('copy').checked) {
+		copyToClipboard(password);
+		document.getElementById('password').value = "Password copied";
+		setTimeout(function () { clearPassword(); }, 3000);
+	}
+	else if (document.getElementById('show').checked) {
+		document.getElementById('password').value = password;
+		document.getElementById('password').focus();
+		document.getElementById('password').select();
+	}
+	else if (document.getElementById('copyshow').checked) {
+		copyToClipboard(password);
+		document.getElementById('password').value = 'Copied ' + password;
+	}
+}
+
+function setStates() {
+	if (document.getElementById('copy').checked) {
+		document.getElementById('clear').removeAttribute('disabled');
+		document.getElementById('clear-label').style.color = "initial";
+	}
+	else {
+		document.getElementById('clear').setAttribute('disabled','disabled');
+		document.getElementById('clear-label').style.color = "#CCC";
+	}		
+}
+
+function clearPassword() {
+	document.getElementById('password').value = "";
+}	
+
+function clearAll() {
+	document.getElementById('password').value = "";
+	document.getElementById('site').value = "";
+	document.getElementById('master').value = "";
+	document.getElementById('master').focus();
+}
+
+function copyToClipboard(text) {
+	if (window.clipboardData && window.clipboardData.setData) {
+		return clipboardData.setData("Text", text); 	
+	}
+	else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+		var textarea = document.createElement("textarea");
+		textarea.textContent = text;
+		textarea.style.position = "fixed";
+		document.body.appendChild(textarea);
+		textarea.select();
+		try {
+			return document.execCommand("copy");
+		}
+		catch (ex) {
+			console.warn("Copy to clipboard failed.", ex);
+			return false;
+		}
+		finally {
+			document.body.removeChild(textarea);
+		}
+	}
+}
+</script>
+</head>
+<body>
+
+<div>
+	<h3>Password generator - New</h3>
+	<div>
+		<input class="input-prop" size='30' type="password" name="master" id="master" placeholder="Master password" autofocus onKeyDown="clearPassword();"/>
+	</div>
+
+	<div style="margin-top:10px;">
+		<input class="input-prop" size='30' type="text" name="site" id="site" placeholder="Site URL" autocorrect="off" autocapitalize="off"  onkeydown="clearPassword();"/>
+	</div>
+
+	<div style="margin-top:10px;">
+		<label><input type="checkbox" value="" id="special" onClick="clearPassword();"/>Include special character in password</label>
+	</div>
+
+	<div style="margin-top:5px;">
+		<label><input type="radio" name="mode" id="copy" value="copy" checked onClick="setStates();"/>Copy password to clipboard</label>
+	</div>
+
+	<div style="margin-left:20px;margin-top:5px;">
+		<label id="clear-label"><input type="checkbox" id="clear" checked/>Clear fields after copying password</label>
+	</div>
+
+	<div style="margin-top:5px;">
+		<label><input type="radio" name="mode" id="show" value="show" onClick="setStates();"/>Show password</label>
+	</div>
+
+	<div style="margin-top:5px;">
+		<label><input type="radio" name="mode" id="copyshow" value="copyshow" onClick="setStates();"/>Copy and show password</label>
+	</div>
+
+	<div style="margin-top:10px;">
+		<button type="button" id="generate" onClick="compute();">Generate</button>
+		<input class="input-mono" style="margin-left:7px;" type="text" name="password" id="password" placeholder="Results"/>
+	</div>
+	
+	<div style="margin-top:10px;">
+		<button type="button" onClick="clearAll();">Clear fields</button>
+	</div>
+
+</div>
+
+</body>
+</html>
